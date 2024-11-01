@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Timer</title>
+    <style>
+      :root {
+        --primary-color: #4b7bec; /* New blue color */
+        --secondary-color: #fed330; /* New yellow color */
+        --background-image: url("./bg-img.jpeg"); /* Sample background image from Unsplash */
+        --text-color: #ffffff;
+        --border-radius: 15px;
+      }
+
+      body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-image: var(--background-image);
+        background-size:cover;
+        background-position: center;
+        font-family: Arial, sans-serif;
+      }
+
+      .tim-cont {
+        height: 70%;
+        width: 90%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        border: 2px solid var(--primary-color);
+        border-radius: var(--border-radius);
+        background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+      }
+
+      .tim-disp {
+        height: 20%;
+        width: 70%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        color: var(--text-color);
+        font-size: 40px;
+        margin: 10px;
+        border: 2px solid var(--secondary-color);
+        border-radius: var(--border-radius);
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+      }
+
+      .tim-in {
+        height: 10%;
+        padding: 10px;
+        display: flex;
+        gap: 5px;
+        margin: 10px;
+        border: 2px solid var(--primary-color);
+        border-radius: var(--border-radius);
+        background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent black */
+      }
+
+      .tim-in input {
+        width: 100px;
+        padding: 10px;
+        border: 2px solid var(--secondary-color);
+        border-radius: var(--border-radius);
+        text-align: center;
+      }
+
+      .controls {
+        display: flex;
+        width: 100%;
+        margin: 10px;
+        justify-content: space-around;
+      }
+
+      .btn {
+        background-color: var(--secondary-color);
+        color: var(--text-color);
+        padding: 10px;
+        border: none;
+        cursor: pointer;
+        border-radius: var(--border-radius);
+        transition: transform 0.3s ease, border 0.3s ease;
+      }
+
+      .btn:hover {
+        transform: scale(1.1);
+        border: 2px solid var(--primary-color);
+      }
+
+      @media (max-width: 580px) {
+        .tim-cont {
+          width: 95%;
+          height: auto;
+        }
+
+        .tim-disp {
+          width: 85%;
+          font-size: 30px;
+        }
+
+        .tim-in {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .tim-in input {
+          width: 80px;
+          margin-bottom: 10px;
+        }
+
+        .controls {
+          flex-direction: column;
+          align-items: center;
+        }
+
+        .controls .btn {
+          width: 80%;
+          margin-bottom: 10px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="tim-cont">
+      <div class="tim-disp">
+        <label for="count"><b id="txt">00:00:00</b></label>
+      </div>
+      <div class="tim-in">
+        <input id="hr" type="number" placeholder="Hours" />
+        <input id="min" type="number" placeholder="Minutes" />
+        <input id="sec" type="number" placeholder="Seconds" />
+      </div>
+      <div class="controls">
+        <button class="btn" id="sp">STOP</button>
+        <button class="btn" id="st">START</button>
+      </div>
+    </div>
+    <script>
+      let st = document.getElementById("st");
+      let sp = document.getElementById("sp");
+      let txt = document.getElementById("txt");
+      let hr = 0;
+      let min = 0;
+      let sec = 0;
+      let inhr = document.getElementById("hr");
+      let inmin = document.getElementById("min");
+      let insec = document.getElementById("sec");
+      let started = false;
+      let interval;
+
+      function updateDisplay() {
+        txt.innerHTML = `${hr.toString().padStart(2, "0")}:${min
+          .toString()
+          .padStart(2, "0")}:${sec.toString().padStart(2, "0")}`;
+      }
+
+      function startTimer() {
+        if (!started) {
+          started = true;
+          hr = parseInt(inhr.value) || 0;
+          min = parseInt(inmin.value) || 0;
+          sec = parseInt(insec.value) || 0;
+          updateDisplay();
+          interval = setInterval(() => {
+            if (sec === 0 && min === 0 && hr === 0) {
+              alert("DONE !!");
+              clearInterval(interval);
+              started = false;
+              return;
+            }
+            if (sec === 0) {
+              if (min === 0) {
+                hr--;
+                min = 59;
+              } else {
+                min--;
+              }
+              sec = 59;
+            } else {
+              sec--;
+            }
+            updateDisplay();
+          }, 1000);
+        }
+      }
+
+      function stopTimer() {
+        if (started) {
+          started = false;
+          clearInterval(interval);
+        }
+      }
+
+      st.addEventListener("click", startTimer);
+      sp.addEventListener("click", stopTimer);
+    </script>
+  </body>
+</html>
